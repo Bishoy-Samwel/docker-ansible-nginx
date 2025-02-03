@@ -1,4 +1,6 @@
 #!/usr/bin/bash
 echo ==========
 #ansible-playbook plays.yml --ask-become-pass
-ansible-playbook plays.yml --tags update_apt --ask-become-pass
+#ansible-playbook plays.yml --tags update_apt --ask-become-pass
+
+ansible-playbook plays.yml  -e "package_name=nginx package_version=latest" --ask-become-pass

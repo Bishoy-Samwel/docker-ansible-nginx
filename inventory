@@ -1,6 +1,3 @@
 [web_servers]
 172.17.0.2
 
-[web_servers:vars]
-  package_name=nginx
-  package_version=latest
