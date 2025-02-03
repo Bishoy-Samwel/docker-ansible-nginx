@@ -12,6 +12,15 @@
         state: latest
         update_cache: yes
 
+    - name: install packages
+      apt:
+        name: "{{ item.package_name }}"
+        state: "{{ item.package_state }}"
+      loop:
+        - { package_name: "nginx", package_state: "present" }
+        - { package_name: "mariadb-server", package_state: "latest" }
+        - { package_name: "curl", package_state: "absent" }
+
 
     - name: install {{ package_name }}
       tags: install_nginx,always
