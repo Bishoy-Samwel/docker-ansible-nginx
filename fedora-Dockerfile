@@ -1,0 +1,11 @@
+FROM fedora
+
+RUN microdnf install -y sudo ssh
+
+RUN id -u bob || adduser bob
+RUN echo "bob:123" | chpasswd
+
+RUN groupadd sudo || true && usermod -aG sudo bob
+
+# Set the entrypoint to start SSH service and bash
+ENTRYPOINT service ssh start && bash
