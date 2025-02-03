@@ -1,6 +1,9 @@
 - name: nginx
   hosts: all
   become: true
+  vars:
+    package_name: nginx
+    package_version: latest
   tasks:
     - name: update apt cache
       tags: update_apt
@@ -10,9 +13,9 @@
         update_cache: yes
 
 
-    - name: install nginx
+    - name: install {{ package_name }}
       tags: install_nginx,always
-      apt: name=nginx state=latest
+      apt: name={{ package_name }} state={{ package_version }}
 
 
     - name: start nginx
