@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+echo ==========
+#ansible-playbook plays.yml --ask-become-pass
+ansible-playbook plays.yml --tags update_apt --ask-become-pass
