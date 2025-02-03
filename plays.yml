@@ -1,9 +1,9 @@
 - name: nginx
   hosts: all
   become: true
-  vars:
-    package_name: nginx
-    package_version: latest
+#  vars:
+#    package_name: nginx
+#    package_version: latest
   tasks:
     - name: update apt cache
       tags: update_apt
