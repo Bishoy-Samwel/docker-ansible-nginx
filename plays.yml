@@ -1,0 +1,25 @@
+- name: nginx
+  hosts: all
+  become: true
+  tasks:
+    - name: install nginx
+      apt: name=nginx state=latest
+    - name: start nginx
+      service:
+        name: nginx
+        state: started
+        use: service
+    - name: update apt cache
+      ansible.builtin.apt:
+        name: nginx
+        state: latest
+        update_cache: yes
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: ./index.html
+        dest: /var/www/html
+    - name: Restart nginx
+      ansible.builtin.service:
+         name: nginx
+         state: restarted
+         use: service
