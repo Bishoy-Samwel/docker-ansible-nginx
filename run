@@ -1,6 +1,16 @@
 #!/usr/bin/bash
 echo ==========
+
+#docker build -f ubuntu-Dockerfile -t ubuntu .
+#docker run -itd ubuntu
+
+#ssh-copy-id -i /home/bishoy/.ssh/key.pub bob@172.17.0.3
+
+
 #ansible-playbook plays.yml --ask-become-pass
 #ansible-playbook plays.yml --tags update_apt --ask-become-pass
 
 ansible-playbook plays.yml  -e "package_name=nginx package_version=latest" --ask-become-pass
+
+#docker build -f centos-Dockerfile -t fedora .
+# docker container run -itd -t centos

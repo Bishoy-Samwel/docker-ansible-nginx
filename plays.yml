@@ -17,14 +17,41 @@
         name: "{{ item.package_name }}"
         state: "{{ item.package_state }}"
       loop:
-        - { package_name: "nginx", package_state: "present" }
+        - { package_name: "nginx", package_state: "absent" }
         - { package_name: "mariadb-server", package_state: "latest" }
         - { package_name: "curl", package_state: "absent" }
 
+    - name: Install nginx on Ubuntu
+      apt:
+        name: nginx
+        state: present
+      register: nginx_res
+      when: ansible_facts['distribution'] == "Ubuntu"
 
-    - name: install {{ package_name }}
-      tags: install_nginx,always
-      apt: name={{ package_name }} state={{ package_version }}
+    - name: Install httpd on CentOS
+      yum:
+        name: httpd
+        state: present
+      when: ansible_facts['distribution'] == "CentOS"
+
+
+    - name: Restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+        use: service
+      debug:
+        var: res
+      when: nginx_res['changed'] == true or nginx_res['failed'] == false
+
+    - name: debugging index file
+      debug:
+        var: nginx_res['changed'], nginx_res['failed']
+      when: nginx_res['changed'] == true or nginx_res['failed'] == false
+
+#    - name: install {{ package_name }}
+#      tags: install_nginx,always
+#      apt: name={{ package_name }} state={{ package_version }}
 
 
     - name: start nginx
@@ -33,12 +60,20 @@
         state: started
         use: service
 
+#      when: ansible_facts['distribution'] == "Ubuntu"
+#
 #    - name: Copy file with owner and permissions
 #      ansible.builtin.copy:
 #        src: ./index.html
 #        dest: /var/www/html
-#    - name: Restart nginx
-#      ansible.builtin.service:
-#         name: nginx
-#         state: restarted
-#         use: service
+
+#    - name: register index file
+#      command: cat /var/www/html/index.html
+#      register: res
+#
+#    - name: debugging index file
+#      debug:
+#        var: res
+#      when: res['changed'] == true
+
+
