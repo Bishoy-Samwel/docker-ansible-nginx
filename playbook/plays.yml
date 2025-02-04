@@ -21,19 +21,18 @@
         - { package_name: "mariadb-server", package_state: "latest" }
         - { package_name: "curl", package_state: "absent" }
 
-    - name: Install nginx on Ubuntu
-      apt:
-        name: nginx
-        state: present
-      register: nginx_res
-      when: ansible_facts['distribution'] == "Ubuntu"
-
     - name: Install httpd on CentOS
       yum:
         name: httpd
         state: present
       when: ansible_facts['distribution'] == "CentOS"
 
+    - name: Install nginx on Ubuntu
+      apt:
+        name: nginx
+        state: present
+      register: nginx_res
+      when: ansible_facts['distribution'] == "Ubuntu"
 
     - name: Restart nginx
       ansible.builtin.service:

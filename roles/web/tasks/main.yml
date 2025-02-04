@@ -1,0 +1,82 @@
+---
+# tasks file for web
+
+- name: Update packages states
+  apt:
+    name: "{{ item.package_name }}"
+    state: "{{ item.package_state }}"
+  loop:
+    - { package_name: "nginx", package_state: "absent" }
+    - { package_name: "mariadb-server", package_state: "absent" }
+    - { package_name: "curl", package_state: "absent" }
+
+- name: Delete files
+  ansible.builtin.file:
+    path: /var/www/html/{{ item }}
+    state: absent
+  loop:
+    - file1.html
+    - file2.html
+    - index.html
+
+- name: Install package on Ubuntu
+  apt:
+    name: "{{ package_name }}"
+    state: "{{ package_state }}"
+  register: pkg_res
+  when: ansible_facts['distribution'] == "Ubuntu"
+
+
+- name: Copy multiple files
+  ansible.builtin.copy:
+    src: "files/{{ item }}"
+    dest: "/var/www/html"
+    force: yes
+  loop:
+    - file1.html
+    - file2.html
+    - file3.html
+    - index.html
+  when: pkg_res['changed'] == true
+  register: copy_res
+
+- name: Restart nginx
+  debug:
+    var: copy_res['changed']
+
+- name: Restart nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
+    use: service
+  when: copy_res['changed'] == true
+
+#  - name: debugging index file
+#    debug:
+#      var: nginx_res['changed'], nginx_res['failed']
+#    when: nginx_res['changed'] == true or nginx_res['failed'] == false
+
+#    - name: install {{ package_name }}
+#      tags: install_nginx,always
+#      apt: name={{ package_name }} state={{ package_version }}
+
+
+#  - name: start nginx
+#    service:
+#      name: nginx
+#      state: started
+#      use: service
+
+#      when: ansible_facts['distribution'] == "Ubuntu"
+#
+
+
+#    - name: register index file
+#      command: cat /var/www/html/index.html
+#      register: res
+#
+#    - name: debugging index file
+#      debug:
+#        var: res
+#      when: res['changed'] == true
+
