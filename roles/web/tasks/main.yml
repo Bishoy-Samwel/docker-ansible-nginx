@@ -25,7 +25,9 @@
     state: "{{ package_state }}"
   register: pkg_res
   when: ansible_facts['distribution'] == "Ubuntu"
-  notify: copy_handler
+  notify:
+   - copy_handler
+   - template_handler
 
 
 

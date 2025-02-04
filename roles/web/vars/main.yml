@@ -2,3 +2,5 @@
 # vars file for web
 package_name: nginx
 package_state: latest
+
+user_name: Bishoy
