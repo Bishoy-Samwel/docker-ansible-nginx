@@ -25,31 +25,9 @@
     state: "{{ package_state }}"
   register: pkg_res
   when: ansible_facts['distribution'] == "Ubuntu"
+  notify: copy_handler
 
 
-- name: Copy multiple files
-  ansible.builtin.copy:
-    src: "files/{{ item }}"
-    dest: "/var/www/html"
-    force: yes
-  loop:
-    - file1.html
-    - file2.html
-    - file3.html
-    - index.html
-  when: pkg_res['changed'] == true
-  register: copy_res
-
-- name: Restart nginx
-  debug:
-    var: copy_res['changed']
-
-- name: Restart nginx
-  ansible.builtin.service:
-    name: nginx
-    state: restarted
-    use: service
-  when: copy_res['changed'] == true
 
 #  - name: debugging index file
 #    debug:

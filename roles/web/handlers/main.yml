@@ -1,2 +1,24 @@
 ---
 # handlers file for web
+
+- name: copy_handler
+  ansible.builtin.copy:
+    src: "files/{{ item }}"
+    dest: "/var/www/html"
+    force: yes
+  loop:
+    - file1.html
+    - file2.html
+    - file3.html
+    - index.html
+#  when: pkg_res['changed'] == true
+  register: copy_res
+  notify: restart_nginx
+
+
+- name: restart_nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
+    use: service
+  when: copy_res['changed'] == true
